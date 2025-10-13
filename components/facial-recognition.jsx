@@ -15,9 +15,9 @@ export function FacialRecognition() {
   const router = useRouter()
   const { toast } = useToast()
 
-  // ✅ Inicia a câmera
+  // Inicia a câmera
   const startCamera = async () => {
-    if (typeof window === "undefined") return // garante execução apenas no cliente
+    if (typeof window === "undefined") return
 
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
@@ -43,7 +43,7 @@ export function FacialRecognition() {
     }
   }
 
-  // ✅ Para a câmera
+  // Para a câmera
   const stopCamera = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop())
@@ -52,7 +52,7 @@ export function FacialRecognition() {
     setStep("idle")
   }
 
-  // ✅ Captura a imagem e simula análise
+  // Captura e analisa
   const captureAndAnalyze = () => {
     if (!videoRef.current || !canvasRef.current) return
 
@@ -86,7 +86,7 @@ export function FacialRecognition() {
     }, 3000)
   }
 
-  // ✅ Limpa a câmera ao desmontar o componente
+  // Limpa a câmera ao desmontar
   useEffect(() => {
     return () => stopCamera()
   }, [])
@@ -95,7 +95,7 @@ export function FacialRecognition() {
     <div className="space-y-8">
       <Card className="p-8">
         <div className="aspect-video bg-secondary rounded-lg overflow-hidden relative">
-          {/* Estado inicial */}
+          {/* Estado idle */}
           {step === "idle" && (
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
               <Camera className="h-16 w-16 text-muted-foreground mb-4" />
@@ -109,7 +109,7 @@ export function FacialRecognition() {
             </div>
           )}
 
-          {/* Visualização da câmera */}
+          {/* Câmera */}
           {step === "camera" && (
             <>
               <video
@@ -150,7 +150,7 @@ export function FacialRecognition() {
           <canvas ref={canvasRef} className="hidden" />
         </div>
 
-        {/* Botões de ação */}
+        {/* Botões */}
         {step === "camera" && (
           <div className="mt-6 flex gap-4 justify-center">
             <Button onClick={captureAndAnalyze} size="lg">
