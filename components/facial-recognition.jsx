@@ -8,25 +8,33 @@ import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 
 export function FacialRecognition() {
-  const [step, setStep] = useState("idle") // idle | camera | analyzing | complete
-  const [stream, setStream] = useState(null) // <- sem tipagem
-  const videoRef = useRef(null)
-  const canvasRef = useRef(null)
+  const [step, setStep] = useState<"idle" | "camera" | "analyzing" | "complete">("idle")
+  const [stream, setStream] = useState<MediaStream | null>(null)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const router = useRouter()
   const { toast } = useToast()
 
+  // ✅ Inicia a câmera
   const startCamera = async () => {
+    if (typeof window === "undefined") return // garante execução apenas no cliente
+
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "user", width: 1280, height: 720 },
       })
       setStream(mediaStream)
+
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream
-        videoRef.current.play()
+        await videoRef.current.play().catch((err) => {
+          console.warn("Autoplay bloqueado:", err)
+        })
       }
+
       setStep("camera")
     } catch (error) {
+      console.error("Erro ao acessar câmera:", error)
       toast({
         title: "Erro ao acessar câmera",
         description: "Por favor, permita o acesso à câmera para continuar.",
@@ -35,6 +43,7 @@ export function FacialRecognition() {
     }
   }
 
+  // ✅ Para a câmera
   const stopCamera = () => {
     if (stream) {
       stream.getTracks().forEach((track) => track.stop())
@@ -43,6 +52,7 @@ export function FacialRecognition() {
     setStep("idle")
   }
 
+  // ✅ Captura a imagem e simula análise
   const captureAndAnalyze = () => {
     if (!videoRef.current || !canvasRef.current) return
 
@@ -57,10 +67,8 @@ export function FacialRecognition() {
 
     setStep("analyzing")
 
-    // Simula análise da IA
+    // Simulação de IA
     setTimeout(() => {
-      setStep("complete")
-
       const results = {
         skinTone: "warm",
         colorPalette: ["#8B4513", "#D2691E", "#CD853F", "#DEB887"],
@@ -69,6 +77,7 @@ export function FacialRecognition() {
       }
 
       localStorage.setItem("divaImperialAnalysis", JSON.stringify(results))
+      setStep("complete")
 
       setTimeout(() => {
         stopCamera()
@@ -77,7 +86,7 @@ export function FacialRecognition() {
     }, 3000)
   }
 
-  // Para limpar a câmera caso o componente seja desmontado
+  // ✅ Limpa a câmera ao desmontar o componente
   useEffect(() => {
     return () => stopCamera()
   }, [])
@@ -86,10 +95,13 @@ export function FacialRecognition() {
     <div className="space-y-8">
       <Card className="p-8">
         <div className="aspect-video bg-secondary rounded-lg overflow-hidden relative">
+          {/* Estado inicial */}
           {step === "idle" && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
               <Camera className="h-16 w-16 text-muted-foreground mb-4" />
-              <p className="text-muted-foreground mb-6">Clique no botão abaixo para iniciar</p>
+              <p className="text-muted-foreground mb-6">
+                Clique abaixo para iniciar a análise facial
+              </p>
               <Button onClick={startCamera} size="lg">
                 <Camera className="mr-2 h-5 w-5" />
                 Ativar Câmera
@@ -97,34 +109,48 @@ export function FacialRecognition() {
             </div>
           )}
 
+          {/* Visualização da câmera */}
           {step === "camera" && (
             <>
-              <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover" />
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover"
+              />
               <div className="absolute inset-0 border-4 border-primary/50 rounded-lg pointer-events-none">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-80 border-2 border-primary rounded-full" />
               </div>
             </>
           )}
 
+          {/* Analisando */}
           {step === "analyzing" && (
-            <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center">
+            <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center text-center">
               <Loader2 className="h-16 w-16 text-primary animate-spin mb-4" />
               <p className="text-lg font-medium">Analisando suas características...</p>
-              <p className="text-sm text-muted-foreground mt-2">Isso levará apenas alguns segundos</p>
+              <p className="text-sm text-muted-foreground mt-2">
+                Isso levará apenas alguns segundos
+              </p>
             </div>
           )}
 
+          {/* Concluído */}
           {step === "complete" && (
-            <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center">
+            <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center text-center">
               <CheckCircle2 className="h-16 w-16 text-primary mb-4" />
               <p className="text-lg font-medium">Análise concluída!</p>
-              <p className="text-sm text-muted-foreground mt-2">Redirecionando para seus resultados...</p>
+              <p className="text-sm text-muted-foreground mt-2">
+                Redirecionando para seus resultados...
+              </p>
             </div>
           )}
 
           <canvas ref={canvasRef} className="hidden" />
         </div>
 
+        {/* Botões de ação */}
         {step === "camera" && (
           <div className="mt-6 flex gap-4 justify-center">
             <Button onClick={captureAndAnalyze} size="lg">
@@ -137,20 +163,25 @@ export function FacialRecognition() {
         )}
       </Card>
 
+      {/* Cards informativos */}
       <div className="grid md:grid-cols-3 gap-6">
         <Card className="p-6">
           <h3 className="font-semibold mb-2">Privacidade</h3>
-          <p className="text-sm text-muted-foreground">Suas imagens não são armazenadas e são processadas localmente</p>
+          <p className="text-sm text-muted-foreground">
+            Suas imagens não são armazenadas e são processadas localmente.
+          </p>
         </Card>
         <Card className="p-6">
           <h3 className="font-semibold mb-2">Precisão</h3>
           <p className="text-sm text-muted-foreground">
-            Tecnologia avançada de análise facial para resultados precisos
+            Tecnologia avançada de análise facial para resultados precisos.
           </p>
         </Card>
         <Card className="p-6">
-          <h3 className="font-semibold mb-2">Instantâneo</h3>
-          <p className="text-sm text-muted-foreground">Resultados em segundos para você começar sua transformação</p>
+          <h3 className="font-semibold mb-2">Rapidez</h3>
+          <p className="text-sm text-muted-foreground">
+            Resultados em segundos para você começar sua transformação.
+          </p>
         </Card>
       </div>
     </div>
