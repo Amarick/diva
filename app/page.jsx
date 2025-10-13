@@ -8,7 +8,15 @@ export default function HomePage() {
     { src: "/foto1.jpeg", alt: "Estilo Formal" },
     { src: "/foto2.jpeg", alt: "Estilo Streetwear" },
     { src: "/foto3.jpeg", alt: "Estilo Old Money" },
-    { src: "/foto4.jpeg", alt: "Estilo Gótico" },
+    { src: "/foto4.jpeg", alt: "Carrossel" },
+    { src: "/foto5.jpeg", alt: "Carrossel" },
+    { src: "/foto6.jpeg", alt: "Carrossel" },
+    { src: "/foto7.jpeg", alt: "Carrossel" },
+    { src: "/foto8.jpeg", alt: "Carrossel" },
+    { src: "/foto9.jpeg", alt: "Carrossel" },
+    { src: "/foto10.jpeg", alt: "Carrossel" },
+    { src: "/foto11.jpeg", alt: "Carrossel" },
+
   ];
 
   // Repetimos as imagens para o carrossel contínuo
