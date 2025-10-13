@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Diva Imperial</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="public/logo.png" alt="Diva Imperial Logo">
+            </a>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Início</a></li>
+                <li><a href="reconhecimento.html" class="nav-link">Reconhecimento</a></li>
+                <li><a href="estilos.html" class="nav-link">Estilos</a></li>
+                <li><a href="colorimetria.html" class="nav-link">Colorimetria</a></li>
+                <li><a href="feedback.html" class="nav-link active">Feedback</a></li>
+                <li><a href="sobre.html" class="nav-link">Sobre</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Seu Feedback é Importante</h1>
+                <p class="page-description">Conte-nos sobre sua experiência com o Diva Imperial</p>
+            </div>
+
+            <div class="card feedback-card">
+                <form id="feedbackForm" class="feedback-form">
+                    <div class="form-group">
+                        <label for="name" class="form-label">Nome</label>
+                        <input type="text" id="name" class="form-input" placeholder="Seu nome" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" class="form-input" placeholder="seu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rating" class="form-label">Como você avalia sua experiência?</label>
+                        <div class="rating-stars" id="ratingStars">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                        <input type="hidden" id="rating" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message" class="form-label">Sua Mensagem</label>
+                        <textarea id="message" class="form-textarea" rows="6" placeholder="Conte-nos sobre sua experiência..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full">Enviar Feedback</button>
+                </form>
+
+                <div id="feedbackSuccess" class="feedback-success hidden">
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <h3>Obrigada pelo seu feedback!</h3>
+                    <p>Sua opinião é muito importante para nós.</p>
+                    <a href="index.html" class="btn btn-outline">Voltar ao Início</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="feedback.js"></script>
+</body>
+</html>

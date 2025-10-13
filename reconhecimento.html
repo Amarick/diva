@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reconhecimento Facial - Diva Imperial</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="public/logo.png" alt="Diva Imperial Logo">
+            </a>
+            <button class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html" class="nav-link">Início</a></li>
+                <li><a href="reconhecimento.html" class="nav-link active">Reconhecimento</a></li>
+                <li><a href="estilos.html" class="nav-link">Estilos</a></li>
+                <li><a href="colorimetria.html" class="nav-link">Colorimetria</a></li>
+                <li><a href="feedback.html" class="nav-link">Feedback</a></li>
+                <li><a href="sobre.html" class="nav-link">Sobre</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="page-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">Reconhecimento Facial</h1>
+                <p class="page-description">
+                    Permita o acesso à câmera para analisarmos suas características e descobrir seu estilo único
+                </p>
+            </div>
+
+            <!-- Camera Card -->
+            <div class="card camera-card">
+                <div class="camera-container" id="cameraContainer">
+                    <!-- Idle State -->
+                    <div class="camera-state" id="idleState">
+                        <svg class="camera-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                        <p class="camera-message">Clique no botão abaixo para iniciar</p>
+                        <button class="btn btn-primary" id="startCameraBtn">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                <circle cx="12" cy="13" r="4"/>
+                            </svg>
+                            Ativar Câmera
+                        </button>
+                    </div>
+
+                    <!-- Camera Active State -->
+                    <div class="camera-state hidden" id="cameraState">
+                        <video id="videoElement" autoplay playsinline></video>
+                        <div class="face-overlay">
+                            <div class="face-guide"></div>
+                        </div>
+                    </div>
+
+                    <!-- Analyzing State -->
+                    <div class="camera-state hidden" id="analyzingState">
+                        <div class="analyzing-content">
+                            <div class="spinner"></div>
+                            <p class="analyzing-title">Analisando suas características...</p>
+                            <p class="analyzing-subtitle">Isso levará apenas alguns segundos</p>
+                        </div>
+                    </div>
+
+                    <!-- Complete State -->
+                    <div class="camera-state hidden" id="completeState">
+                        <div class="complete-content">
+                            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            <p class="complete-title">Análise concluída!</p>
+                            <p class="complete-subtitle">Redirecionando para seus resultados...</p>
+                        </div>
+                    </div>
+
+                    <canvas id="canvas" class="hidden"></canvas>
+                </div>
+
+                <div class="camera-controls hidden" id="cameraControls">
+                    <button class="btn btn-primary" id="captureBtn">Capturar e Analisar</button>
+                    <button class="btn btn-outline" id="cancelBtn">Cancelar</button>
+                </div>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3 class="info-title">Privacidade</h3>
+                    <p class="info-description">Suas imagens não são armazenadas e são processadas localmente</p>
+                </div>
+                <div class="info-card">
+                    <h3 class="info-title">Precisão</h3>
+                    <p class="info-description">Tecnologia avançada de análise facial para resultados precisos</p>
+                </div>
+                <div class="info-card">
+                    <h3 class="info-title">Instantâneo</h3>
+                    <p class="info-description">Resultados em segundos para você começar sua transformação</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="camera.js"></script>
+</body>
+</html>
