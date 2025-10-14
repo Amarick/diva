@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 export function FacialRecognition() {
   const [step, setStep] = useState<"idle" | "camera" | "analyzing" | "complete">("idle")
   const [stream, setStream] = useState<MediaStream | null>(null)
+  const [cameraError, setCameraError] = useState<string | null>(null)
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const router = useRouter()
@@ -21,20 +22,20 @@ export function FacialRecognition() {
 
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user", width: 1280, height: 720 },
+        video: {
+          facingMode: "user",
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+        audio: false,
       })
       setStream(mediaStream)
-
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream
-        await videoRef.current.play().catch((err) => {
-          console.warn("Autoplay bloqueado:", err)
-        })
-      }
-
-      setStep("camera")
+      setCameraError(null)
+      console.log("[v0] Camera stream obtained successfully", mediaStream)
     } catch (error) {
-      console.error("Erro ao acessar câmera:", error)
+      console.error("[v0] Erro ao acessar câmera:", error)
+      const errorMessage = error instanceof Error ? error.message : "Erro desconhecido"
+      setCameraError(errorMessage)
       toast({
         title: "Erro ao acessar câmera",
         description: "Por favor, permita o acesso à câmera para continuar.",
@@ -50,9 +51,10 @@ export function FacialRecognition() {
       setStream(null)
     }
     setStep("idle")
+    setCameraError(null)
   }
 
-  // Captura e analisa
+  // Captura e analisa a imagem
   const captureAndAnalyze = () => {
     if (!videoRef.current || !canvasRef.current) return
 
@@ -86,40 +88,68 @@ export function FacialRecognition() {
     }, 3000)
   }
 
+  useEffect(() => {
+    if (videoRef.current && stream) {
+      console.log("[v0] Setting video srcObject", stream)
+      videoRef.current.srcObject = stream
+
+      // Wait for metadata to load before playing
+      videoRef.current.onloadedmetadata = () => {
+        console.log("[v0] Video metadata loaded")
+        const playPromise = videoRef.current?.play()
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              console.log("[v0] Video playing successfully")
+              setStep("camera")
+            })
+            .catch((err) => {
+              console.error("[v0] Autoplay bloqueado:", err)
+              setCameraError("Não foi possível iniciar o vídeo automaticamente")
+            })
+        }
+      }
+    }
+  }, [stream])
+
   // Limpa a câmera ao desmontar
   useEffect(() => {
-    return () => stopCamera()
-  }, [])
+    return () => {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop())
+      }
+    }
+  }, [stream])
 
   return (
     <div className="space-y-8">
       <Card className="p-8">
-        <div className="aspect-video bg-secondary rounded-lg overflow-hidden relative">
+        <div className="aspect-video bg-secondary rounded-lg overflow-hidden relative min-h-[400px]">
           {/* Estado idle */}
           {step === "idle" && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10">
               <Camera className="h-16 w-16 text-muted-foreground mb-4" />
-              <p className="text-muted-foreground mb-6">
-                Clique abaixo para iniciar a análise facial
-              </p>
+              <p className="text-muted-foreground mb-6">Clique abaixo para iniciar a análise facial</p>
               <Button onClick={startCamera} size="lg">
                 <Camera className="mr-2 h-5 w-5" />
                 Ativar Câmera
               </Button>
+              {cameraError && <p className="text-destructive text-sm mt-4 max-w-md">Erro: {cameraError}</p>}
             </div>
           )}
 
           {/* Câmera */}
-          {step === "camera" && (
+          {(step === "camera" || stream) && (
             <>
               <video
                 ref={videoRef}
                 autoPlay
                 playsInline
                 muted
-                className="w-full h-full object-cover"
+                style={{ transform: "scaleX(-1)" }}
+                className="w-full h-full object-cover absolute inset-0"
               />
-              <div className="absolute inset-0 border-4 border-primary/50 rounded-lg pointer-events-none">
+              <div className="absolute inset-0 border-4 border-primary/50 rounded-lg pointer-events-none z-10">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-80 border-2 border-primary rounded-full" />
               </div>
             </>
@@ -127,23 +157,19 @@ export function FacialRecognition() {
 
           {/* Analisando */}
           {step === "analyzing" && (
-            <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center text-center">
+            <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center text-center z-20">
               <Loader2 className="h-16 w-16 text-primary animate-spin mb-4" />
               <p className="text-lg font-medium">Analisando suas características...</p>
-              <p className="text-sm text-muted-foreground mt-2">
-                Isso levará apenas alguns segundos
-              </p>
+              <p className="text-sm text-muted-foreground mt-2">Isso levará apenas alguns segundos</p>
             </div>
           )}
 
           {/* Concluído */}
           {step === "complete" && (
-            <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center text-center">
+            <div className="absolute inset-0 bg-background/90 flex flex-col items-center justify-center text-center z-20">
               <CheckCircle2 className="h-16 w-16 text-primary mb-4" />
               <p className="text-lg font-medium">Análise concluída!</p>
-              <p className="text-sm text-muted-foreground mt-2">
-                Redirecionando para seus resultados...
-              </p>
+              <p className="text-sm text-muted-foreground mt-2">Redirecionando para seus resultados...</p>
             </div>
           )}
 
@@ -179,9 +205,7 @@ export function FacialRecognition() {
         </Card>
         <Card className="p-6">
           <h3 className="font-semibold mb-2">Rapidez</h3>
-          <p className="text-sm text-muted-foreground">
-            Resultados em segundos para você começar sua transformação.
-          </p>
+          <p className="text-sm text-muted-foreground">Resultados em segundos para você começar sua transformação.</p>
         </Card>
       </div>
     </div>
