@@ -8,7 +8,7 @@ const styles = [
   {
     name: "Vintage",
     description: "Clássico e atemporal, inspirado nas décadas passadas com peças retrô e elegantes",
-    image: "public/foto13.jpeg",
+    image: "/foto13.jpeg",
     colors: ["#8B4513", "#D2691E", "#CD853F"],
     characteristics: ["Retrô", "Elegante", "Atemporal"],
     stores: [
