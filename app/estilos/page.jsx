@@ -8,7 +8,7 @@ const styles = [
   {
     name: "Vintage",
     description: "Clássico e atemporal, inspirado nas décadas passadas com peças retrô e elegantes",
-    image: "public/foto13.jpeg",
+    image: "/foto15.jpeg",
     colors: ["#8B4513", "#D2691E", "#CD853F"],
     characteristics: ["Retrô", "Elegante", "Atemporal"],
     stores: [
@@ -20,7 +20,7 @@ const styles = [
   {
     name: "Streetwear",
     description: "Urbano e descolado, com peças confortáveis, oversized e referências da cultura de rua",
-    image: "public/foto17.jpeg",
+    image: "/foto17.jpeg",
     colors: ["#000000", "#FFFFFF", "#FF6B6B"],
     characteristics: ["Urbano", "Confortável", "Moderno"],
     stores: [
@@ -68,7 +68,7 @@ const styles = [
   {
     name: "Casual",
     description: "Confortável e versátil para o dia a dia, com peças práticas e descomplicadas",
-    image: "/foto15.jpeg",
+    image: "/foto18.jpeg",
     colors: ["#4A90E2", "#F5F5F5", "#7ED321"],
     characteristics: ["Confortável", "Versátil", "Prático"],
     stores: [

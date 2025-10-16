@@ -20,9 +20,9 @@ const styleDescriptions = {
 
 const skinToneDescriptions = {
   "muito clara": "Pele clara com tons rosados ou neutros. Harmoniza bem com cores suaves e pastéis.",
-  clara: "Pele clara com subtom quente ou frio. Versátil para diversas paletas de cores.",
+  clara: "Pele clara com tons quentes ou frios. Versátil para diversas paletas de cores.",
   média: "Pele com tom médio, equilibrado. Combina com cores terrosas e vibrantes.",
-  morena: "Pele morena com subtom quente. Realçada por cores ricas e douradas.",
+  morena: "Pele morena com tons quentes. Realçada por cores ricas e douradas.",
   escura: "Pele escura com tons profundos. Valorizada por cores intensas e contrastantes.",
 }
 
