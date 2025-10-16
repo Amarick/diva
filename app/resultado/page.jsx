@@ -106,7 +106,7 @@ export default function ResultadoPage() {
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Como funciona a análise?</p>
                   <p className="text-sm text-muted-foreground">
-                    Nossa tecnologia analisa os tons da sua pele em tempo real através da câmera, identificando seu subtom (quente ou frio) e luminosidade. Cada análise é única e personalizada para você!
+                    Nossa tecnologia analisa os tons da sua pele em tempo real através da câmera, identificando seu tom de pele (quente ou frio) e luminosidade. Cada análise é única e personalizada para você!
                   </p>
                   <p className="text-xs text-muted-foreground italic">
                     💡 Dica: Faça a análise em diferentes iluminações para ver como as cores se adaptam!
@@ -115,43 +115,46 @@ export default function ResultadoPage() {
               </div>
             </Card>
 
-            {/* Colorimetria */}
-            <Card className="p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Palette className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold">Sua Colorimetria</h2>
-                  <p className="text-muted-foreground">
-                    Tom de pele: <span className="font-medium text-foreground capitalize">{results.skinTone}</span>
-                  </p>
-                </div>
-              </div>
+          {/* Colorimetria */}
+<Card className="p-8">
+  <div className="flex items-center gap-3 mb-6">
+    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+      <Palette className="h-6 w-6 text-primary" />
+    </div>
+    <div>
+      <h2 className="text-2xl font-bold">Sua Colorimetria</h2>
+      <p className="text-muted-foreground">
+        Tom de pele: <span className="font-medium text-foreground capitalize">{results.skinTone}</span>
+      </p>
+    </div>
+  </div>
 
-              <div className="mb-6 p-4 bg-muted/50 rounded-lg">
-                <p className="text-sm text-muted-foreground">
-                  {skinToneDescriptions[results.skinTone] || "Tom de pele único e especial."}
-                </p>
-              </div>
+  <div className="mb-6 p-4 bg-muted/50 rounded-lg">
+    <p className="text-sm text-muted-foreground">
+      {skinToneDescriptions[results.skinTone] || "Tom de pele único e especial."}
+    </p>
+  </div>
 
-              <div className="space-y-4">
-                <p className="text-muted-foreground">
-                  Estas cores foram selecionadas especialmente para harmonizar com seu tom de pele:
-                </p>
-                <div className="flex gap-4 flex-wrap justify-center">
-                  {results.colorPalette.map((color, index) => (
-                    <div key={index} className="flex flex-col items-center gap-2">
-                      <div
-                        className="w-24 h-24 rounded-lg border-2 border-border shadow-lg hover:scale-105 transition-transform"
-                        style={{ backgroundColor: color }}
-                      />
-                      <span className="text-xs font-mono font-medium">{color}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Card>
+  <div className="space-y-4">
+    <p className="text-muted-foreground">
+      Estas cores foram selecionadas especialmente para harmonizar com seu tom de pele:
+    </p>
+    <div className="flex gap-4 flex-wrap justify-center">
+      {results.colorPalette
+        .sort(() => Math.random() - 0.5) // embaralha as cores a cada render
+        .map((color, index) => (
+          <div key={index} className="flex flex-col items-center gap-2">
+            <div
+              className="w-24 h-24 rounded-lg border-2 border-border shadow-lg hover:scale-105 transition-transform"
+              style={{ backgroundColor: color }}
+            />
+            <span className="text-xs font-mono font-medium">{color}</span>
+          </div>
+        ))}
+    </div>
+  </div>
+</Card>
+
 
             {/* Estilos Recomendados */}
             <Card className="p-8">
