@@ -26,15 +26,6 @@ const skinToneDescriptions = {
   escura: "Pele escura com tons profundos. Valorizada por cores intensas e contrastantes.",
 }
 
-/**
- * @typedef {Object} AnalysisResults
- * @property {string} skinTone
- * @property {string[]} colorPalette
- * @property {string[]} recommendedStyles
- * @property {string} timestamp
- * @property {{ captureTime: string, videoSize: string, analyzed: boolean }=} debug
- */
-
 interface AnalysisResults {
   skinTone: string;
   colorPalette: string[];
@@ -56,13 +47,36 @@ export default function ResultadoPage() {
     setMounted(true)
   }, [])
 
+  // Funções auxiliares para gerar cores e estilos aleatórios
+  function generatePalette(skinTone: string): string[] {
+    const palettes: Record<string, string[]> = {
+      "muito clara": ["#FFE0E0", "#FFD1DC", "#FFC0CB", "#FFB6C1", "#FFDAB9"],
+      clara: ["#FFFACD", "#FAFAD2", "#FFE4B5", "#FFD700", "#FFEFD5"],
+      média: ["#F0E68C", "#D2B48C", "#DEB887", "#C68642", "#A0522D"],
+      morena: ["#D2691E", "#8B4513", "#A0522D", "#CD853F", "#F4A460"],
+      escura: ["#800000", "#8B0000", "#A52A2A", "#B22222", "#DC143C"],
+    }
+    const palette = palettes[skinTone] || ["#ccc", "#aaa", "#888", "#666"]
+    return palette.sort(() => Math.random() - 0.5)
+  }
+
+  function pickRandomStyles(count = 3): string[] {
+    const allStyles = Object.keys(styleDescriptions)
+    return allStyles.sort(() => Math.random() - 0.5).slice(0, count)
+  }
+
   useEffect(() => {
     if (!mounted || typeof window === "undefined") return
 
     const stored = localStorage.getItem("divaImperialAnalysis")
     if (stored) {
       try {
-        const parsed = JSON.parse(stored)
+        const parsed: AnalysisResults = JSON.parse(stored)
+
+        // Sobrescreve paleta e estilos para variar a cada carregamento
+        parsed.colorPalette = generatePalette(parsed.skinTone)
+        parsed.recommendedStyles = pickRandomStyles()
+
         setResults(parsed)
         console.log("[v0] Resultados carregados:", parsed)
       } catch (error) {
