@@ -8,6 +8,7 @@ import Link from "next/link"
 import { Palette, Sparkles, Info, RefreshCw } from "lucide-react"
 import { useRouter } from "next/navigation"
 
+/** Descrições dos estilos */
 const styleDescriptions = {
   Vintage: "Clássico e atemporal, com peças retrô e elegantes",
   Coquette: "Romântico e delicado, com laços, rendas e tons suaves",
@@ -18,6 +19,7 @@ const styleDescriptions = {
   Romântico: "Feminino e delicado, com tecidos fluidos e detalhes suaves",
 }
 
+/** Descrições de tons de pele */
 const skinToneDescriptions = {
   "muito clara": "Pele clara com tons rosados ou neutros. Harmoniza bem com cores suaves e pastéis.",
   clara: "Pele clara com subtom quente ou frio. Versátil para diversas paletas de cores.",
@@ -37,13 +39,16 @@ const skinToneDescriptions = {
 
 export default function ResultadoPage() {
   const [mounted, setMounted] = useState(false)
-  const [results, setResults] = useState<AnalysisResults | null>(null)
+  /** @type {[AnalysisResults | null, Function]} */
+  const [results, setResults] = useState(null)
   const router = useRouter()
 
+  // Marca que o componente foi montado
   useEffect(() => {
     setMounted(true)
   }, [])
 
+  // Carrega resultados do localStorage no cliente
   useEffect(() => {
     if (!mounted || typeof window === "undefined") return
 
@@ -62,6 +67,7 @@ export default function ResultadoPage() {
     }
   }, [mounted, router])
 
+  // Loading enquanto não há resultados
   if (!mounted || !results) {
     return (
       <main className="min-h-screen pt-24 flex items-center justify-center">
@@ -74,26 +80,33 @@ export default function ResultadoPage() {
     <main className="min-h-screen pt-24 bg-gradient-to-br from-background via-primary/5 to-background">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
+          {/* Header */}
           <div className="text-center mb-12">
             <Badge className="mb-4" variant="secondary">
               Análise Completa
             </Badge>
-            <h1 className="font-sans text-4xl md:text-5xl font-bold mb-4">Seus Resultados Imperiais</h1>
-            <p className="text-lg text-muted-foreground">Descubra as cores e estilos perfeitos para você</p>
+            <h1 className="font-sans text-4xl md:text-5xl font-bold mb-4">
+              Seus Resultados Imperiais
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Descubra as cores e estilos perfeitos para você
+            </p>
             {results.debug?.captureTime && (
-              <p className="text-sm text-muted-foreground mt-2">Análise realizada em: {results.debug.captureTime}</p>
+              <p className="text-sm text-muted-foreground mt-2">
+                Análise realizada em: {results.debug.captureTime}
+              </p>
             )}
           </div>
 
           <div className="space-y-6">
+            {/* Como funciona */}
             <Card className="p-6 bg-primary/5 border-primary/20">
               <div className="flex items-start gap-3">
                 <Info className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Como funciona a análise?</p>
                   <p className="text-sm text-muted-foreground">
-                    Nossa tecnologia analisa os tons da sua pele em tempo real através da câmera, identificando seu
-                    subtom (quente ou frio) e luminosidade. Cada análise é única e personalizada para você!
+                    Nossa tecnologia analisa os tons da sua pele em tempo real através da câmera, identificando seu subtom (quente ou frio) e luminosidade. Cada análise é única e personalizada para você!
                   </p>
                   <p className="text-xs text-muted-foreground italic">
                     💡 Dica: Faça a análise em diferentes iluminações para ver como as cores se adaptam!
@@ -118,8 +131,7 @@ export default function ResultadoPage() {
 
               <div className="mb-6 p-4 bg-muted/50 rounded-lg">
                 <p className="text-sm text-muted-foreground">
-                  {skinToneDescriptions[results.skinTone] ||
-                    "Tom de pele único e especial."}
+                  {skinToneDescriptions[results.skinTone] || "Tom de pele único e especial."}
                 </p>
               </div>
 
@@ -165,7 +177,7 @@ export default function ResultadoPage() {
               </div>
             </Card>
 
-            {/* Actions */}
+            {/* Ações */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
               <Button size="lg" variant="outline" onClick={() => router.push("/reconhecimento")}>
                 <RefreshCw className="mr-2 h-5 w-5" />
