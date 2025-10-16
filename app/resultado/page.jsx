@@ -26,18 +26,21 @@ const skinToneDescriptions = {
   escura: "Pele escura com tons profundos. Valorizada por cores intensas e contrastantes.",
 }
 
-/**
- * @typedef {Object} AnalysisResults
- * @property {string} skinTone
- * @property {string[]} colorPalette
- * @property {string[]} recommendedStyles
- * @property {string} timestamp
- * @property {{ captureTime: string, videoSize: string, analyzed: boolean }=} debug
- */
+function generatePalette(skinTone) {
+  const palettes = {
+    "muito clara": ["#FFE0E0", "#FFD1DC", "#FFC0CB", "#FFB6C1", "#FFDAB9"],
+    clara: ["#FFFACD", "#FAFAD2", "#FFE4B5", "#FFD700", "#FFEFD5"],
+    média: ["#F0E68C", "#D2B48C", "#DEB887", "#C68642", "#A0522D"],
+    morena: ["#D2691E", "#8B4513", "#A0522D", "#CD853F", "#F4A460"],
+    escura: ["#800000", "#8B0000", "#A52A2A", "#B22222", "#DC143C"],
+  }
+  const palette = palettes[skinTone] || ["#ccc", "#aaa", "#888", "#666"]
+  return palette.sort(() => Math.random() - 0.5)
+}
 
 export default function ResultadoPage() {
   const [mounted, setMounted] = useState(false)
-  const [results, setResults] = useState<AnalysisResults | null>(null)
+  const [results, setResults] = useState(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -48,18 +51,17 @@ export default function ResultadoPage() {
     if (!mounted || typeof window === "undefined") return
 
     const stored = localStorage.getItem("divaImperialAnalysis")
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored)
-        setResults(parsed)
-        console.log("[v0] Resultados carregados do localStorage:", parsed)
-        console.log("[v0] Paleta de cores detectada:", parsed.colorPalette)
-      } catch (error) {
-        console.error("[v0] Erro ao parsear resultados:", error)
-        router.push("/reconhecimento")
-      }
-    } else {
-      console.log("[v0] Nenhum resultado encontrado, redirecionando...")
+    if (!stored) {
+      router.push("/reconhecimento")
+      return
+    }
+
+    try {
+      const parsed = JSON.parse(stored)
+      parsed.colorPalette = parsed.colorPalette || generatePalette(parsed.skinTone)
+      setResults(parsed)
+    } catch (error) {
+      console.error("Erro ao parsear resultados:", error)
       router.push("/reconhecimento")
     }
   }, [mounted, router])
@@ -77,9 +79,7 @@ export default function ResultadoPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <Badge className="mb-4" variant="secondary">
-              Análise Completa
-            </Badge>
+            <Badge className="mb-4" variant="secondary">Análise Completa</Badge>
             <h1 className="font-sans text-4xl md:text-5xl font-bold mb-4">Seus Resultados Imperiais</h1>
             <p className="text-lg text-muted-foreground">Descubra as cores e estilos perfeitos para você</p>
             {results.debug?.captureTime && (
@@ -87,103 +87,44 @@ export default function ResultadoPage() {
             )}
           </div>
 
-          <div className="space-y-6">
-            <Card className="p-6 bg-primary/5 border-primary/20">
-              <div className="flex items-start gap-3">
-                <Info className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                <div className="space-y-2">
-                  <p className="text-sm font-medium">Como funciona a análise?</p>
-                  <p className="text-sm text-muted-foreground">
-                    Nossa tecnologia analisa os tons da sua pele em tempo real através da câmera, identificando seu
-                    subtom (quente ou frio) e luminosidade. Cada análise é única e personalizada para você!
-                  </p>
-                  <p className="text-xs text-muted-foreground italic">
-                    💡 Dica: Faça a análise em diferentes iluminações para ver como as cores se adaptam!
-                  </p>
+          <Card className="p-8">
+            <h2 className="text-2xl font-bold mb-4">Sua Colorimetria</h2>
+            <p className="text-muted-foreground">
+              Tom de pele: <span className="font-medium capitalize">{results.skinTone}</span>
+            </p>
+            <p className="text-sm text-muted-foreground mb-4">
+              {skinToneDescriptions[results.skinTone] || "Tom de pele único e especial."}
+            </p>
+            <div className="flex gap-4 flex-wrap justify-center">
+              {results.colorPalette?.map((color, i) => (
+                <div key={i} className="flex flex-col items-center gap-2">
+                  <div className="w-24 h-24 rounded-lg border-2 shadow-lg" style={{ backgroundColor: color }} />
+                  <span className="text-xs font-mono font-medium">{color}</span>
                 </div>
-              </div>
-            </Card>
-
-            {/* Colorimetria */}
-            <Card className="p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Palette className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold">Sua Colorimetria</h2>
-                  <p className="text-muted-foreground">
-                    Tom de pele: <span className="font-medium text-foreground capitalize">{results.skinTone}</span>
-                  </p>
-                </div>
-              </div>
-
-              <div className="mb-6 p-4 bg-muted/50 rounded-lg">
-                <p className="text-sm text-muted-foreground">
-                  {skinToneDescriptions[results.skinTone] ||
-                    "Tom de pele único e especial."}
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                <p className="text-muted-foreground">
-                  Estas cores foram selecionadas especialmente para harmonizar com seu tom de pele:
-                </p>
-                <div className="flex gap-4 flex-wrap justify-center">
-                  {results.colorPalette && results.colorPalette.length > 0 ? (
-                    results.colorPalette.map((color, index) => (
-                      <div key={index} className="flex flex-col items-center gap-2">
-                        <div
-                          className="w-24 h-24 rounded-lg border-2 border-border shadow-lg hover:scale-105 transition-transform"
-                          style={{ backgroundColor: color }}
-                          title={`Cor ${index + 1}: ${color}`}
-                        />
-                        <span className="text-xs font-mono font-medium">{color}</span>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-sm text-muted-foreground">
-                      Nenhuma cor detectada. Tente fazer uma nova análise.
-                    </p>
-                  )}
-                </div>
-              </div>
-            </Card>
-
-            {/* Estilos Recomendados */}
-            <Card className="p-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                  <Sparkles className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold">Estilos Recomendados</h2>
-                  <p className="text-muted-foreground">Baseado em suas características únicas</p>
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-4">
-                {results.recommendedStyles.map((style) => (
-                  <Card key={style} className="p-6 bg-card hover:bg-accent/5 transition-colors border-2">
-                    <h3 className="font-bold text-lg mb-2">{style}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {styleDescriptions[style] || "Estilo único e personalizado"}
-                    </p>
-                  </Card>
-                ))}
-              </div>
-            </Card>
-
-            {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-              <Button size="lg" variant="outline" onClick={() => router.push("/reconhecimento")}>
-                <RefreshCw className="mr-2 h-5 w-5" />
-                Fazer Nova Análise
-              </Button>
-              <Button asChild size="lg">
-                <Link href="/estilos">Ver Todos os Estilos</Link>
-              </Button>
+              ))}
             </div>
+          </Card>
+
+          <Card className="p-8 mt-6">
+            <h2 className="text-2xl font-bold mb-4">Estilos Recomendados</h2>
+            <div className="grid md:grid-cols-3 gap-4">
+              {results.recommendedStyles?.map((style) => (
+                <Card key={style} className="p-6 bg-card hover:bg-accent/5 border-2">
+                  <h3 className="font-bold text-lg mb-2">{style}</h3>
+                  <p className="text-sm text-muted-foreground">{styleDescriptions[style] || "Estilo único e personalizado"}</p>
+                </Card>
+              ))}
+            </div>
+          </Card>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+            <Button size="lg" variant="outline" onClick={() => router.push("/reconhecimento")}>
+              <RefreshCw className="mr-2 h-5 w-5" />
+              Fazer Nova Análise
+            </Button>
+            <Button asChild size="lg">
+              <Link href="/estilos">Ver Todos os Estilos</Link>
+            </Button>
           </div>
         </div>
       </div>
