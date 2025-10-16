@@ -87,7 +87,7 @@ export default function EstilosPage() {
                   <p className="text-muted-foreground leading-relaxed">{style.description}</p>
 
                   <div className="flex gap-2 flex-wrap">
-                    {style.characteristics.map((char) => (
+                    {style.characteristics?.map((char) => (
                       <Badge key={char} variant="secondary" className="px-3 py-1">
                         {char}
                       </Badge>
@@ -97,7 +97,7 @@ export default function EstilosPage() {
                   <div>
                     <p className="text-sm font-semibold mb-3">Paleta de cores:</p>
                     <div className="flex gap-3">
-                      {style.colors.map((color, index) => (
+                      {style.colors?.map((color, index) => (
                         <div
                           key={index}
                           className="w-14 h-14 rounded-xl border-2 border-border shadow-md hover:scale-110 transition-transform cursor-pointer"
