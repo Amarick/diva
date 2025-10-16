@@ -8,7 +8,7 @@ const styles = [
   {
     name: "Vintage",
     description: "Clássico e atemporal, inspirado nas décadas passadas com peças retrô e elegantes",
-    image: "public/foto13.jpg",
+    image: "public/foto13.jpeg",
     colors: ["#8B4513", "#D2691E", "#CD853F"],
     characteristics: ["Retrô", "Elegante", "Atemporal"],
     stores: [
@@ -20,7 +20,7 @@ const styles = [
   {
     name: "Streetwear",
     description: "Urbano e descolado, com peças confortáveis, oversized e referências da cultura de rua",
-    image: "/foto17.jpg",
+    image: "/foto17.jpeg",
     colors: ["#000000", "#FFFFFF", "#FF6B6B"],
     characteristics: ["Urbano", "Confortável", "Moderno"],
     stores: [
@@ -32,7 +32,7 @@ const styles = [
   {
     name: "Old Money",
     description: "Sofisticação discreta com peças de qualidade premium, cortes clássicos e elegância atemporal",
-    image: "/foto13.jpg",
+    image: "/foto13.jpeg",
     colors: ["#2C3E50", "#ECF0F1", "#95A5A6"],
     characteristics: ["Sofisticado", "Discreto", "Premium"],
     stores: [
@@ -44,7 +44,7 @@ const styles = [
   {
     name: "Gótico",
     description: "Dramático e misterioso, com tons escuros, detalhes únicos e uma estética alternativa",
-    image: "/foto12.jpg",
+    image: "/foto12.jpeg",
     colors: ["#000000", "#8B0000", "#4B0082"],
     characteristics: ["Dramático", "Misterioso", "Alternativo"],
     stores: [
@@ -56,7 +56,7 @@ const styles = [
   {
     name: "Coquette",
     description: "Romântico e delicado, com laços, rendas, tons pastéis e uma feminilidade suave",
-    image: "/foto14.jpg",
+    image: "/foto14.jpeg",
     colors: ["#FFB6C1", "#FFF0F5", "#E6E6FA"],
     characteristics: ["Romântico", "Delicado", "Feminino"],
     stores: [
@@ -68,7 +68,7 @@ const styles = [
   {
     name: "Casual",
     description: "Confortável e versátil para o dia a dia, com peças práticas e descomplicadas",
-    image: "/foto15.jpg",
+    image: "/foto15.jpeg",
     colors: ["#4A90E2", "#F5F5F5", "#7ED321"],
     characteristics: ["Confortável", "Versátil", "Prático"],
     stores: [

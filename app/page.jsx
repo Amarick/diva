@@ -17,7 +17,7 @@ export default function HomePage() {
     { src: "/foto10.jpeg", alt: "Carrossel" },
     { src: "/foto11.jpeg", alt: "Carrossel" },
     { src: "/foto16.jpeg", alt: "Carrossel" },
-    { src: "/foto18.jpeg", alt: "Carrossel" },
+    { src: "/foto18.jpg", alt: "Carrossel" },
 
   ];
 
