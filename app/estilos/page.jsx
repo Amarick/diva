@@ -20,7 +20,7 @@ const styles = [
   {
     name: "Streetwear",
     description: "Urbano e descolado, com peças confortáveis, oversized e referências da cultura de rua",
-    image: "/foto17.jpeg",
+    image: "/foto17.jpg",
     colors: ["#000000", "#FFFFFF", "#FF6B6B"],
     characteristics: ["Urbano", "Confortável", "Moderno"],
     stores: [
@@ -68,7 +68,7 @@ const styles = [
   {
     name: "Casual",
     description: "Confortável e versátil para o dia a dia, com peças práticas e descomplicadas",
-    image: "/foto18.jpeg",
+    image: "/foto18.jpg",
     colors: ["#4A90E2", "#F5F5F5", "#7ED321"],
     characteristics: ["Confortável", "Versátil", "Prático"],
     stores: [
