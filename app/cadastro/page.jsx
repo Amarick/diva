@@ -1,12 +1,16 @@
 "use client"
 
+
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Crown, Mail, Lock, User } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import { registerUser } from "@/lib/auth"
 
 export default function CadastroPage() {
   const [formData, setFormData] = useState({
@@ -15,15 +19,52 @@ export default function CadastroPage() {
     password: "",
     confirmPassword: "",
   })
+  const [isLoading, setIsLoading] = useState(false)
+  const { toast } = useToast()
+  const router = useRouter()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
+
     if (formData.password !== formData.confirmPassword) {
-      alert("As senhas não coincidem!")
+      toast({
+        title: "Erro",
+        description: "As senhas não coincidem!",
+        variant: "destructive",
+      })
       return
     }
-    // TODO: Implement registration logic
-    console.log("[v0] Registration attempt:", { name: formData.name, email: formData.email })
+
+    if (formData.password.length < 6) {
+      toast({
+        title: "Erro",
+        description: "A senha deve ter pelo menos 6 caracteres",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setIsLoading(true)
+
+    const result = registerUser(formData.name, formData.email, formData.password)
+
+    if (result.success) {
+      toast({
+        title: "Sucesso!",
+        description: result.message,
+      })
+      setTimeout(() => {
+        router.push("/login?cadastro=sucesso")
+      }, 1000)
+    } else {
+      toast({
+        title: "Erro",
+        description: result.message,
+        variant: "destructive",
+      })
+    }
+
+    setIsLoading(false)
   }
 
   const handleChange = (e) => {
@@ -61,6 +102,7 @@ export default function CadastroPage() {
                     onChange={handleChange}
                     className="pl-10"
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -78,6 +120,7 @@ export default function CadastroPage() {
                     onChange={handleChange}
                     className="pl-10"
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -95,6 +138,8 @@ export default function CadastroPage() {
                     onChange={handleChange}
                     className="pl-10"
                     required
+                    disabled={isLoading}
+                    minLength={6}
                   />
                 </div>
               </div>
@@ -112,12 +157,13 @@ export default function CadastroPage() {
                     onChange={handleChange}
                     className="pl-10"
                     required
+                    disabled={isLoading}
                   />
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" size="lg">
-                Criar Conta
+              <Button type="submit" className="w-full" size="lg" disabled={isLoading}>
+                {isLoading ? "Criando conta..." : "Criar Conta"}
               </Button>
 
               <div className="text-center text-sm text-muted-foreground">
