@@ -4,45 +4,43 @@ import type React from "react"
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Crown, Mail, Lock, AlertCircle } from "lucide-react"
-import { useAuth } from "@/lib/auth-context"
+import { Crown, Mail, Lock } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import { loginUser } from "@/lib/auth"
 
 export default function LoginPage() {
-  console.log("[v0] LoginPage component rendered")
-
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
-  const { login } = useAuth()
-
-  console.log("[v0] LoginPage - useAuth hook returned:", { login: typeof login })
+  const { toast } = useToast()
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
-    console.log("[v0] LoginPage - handleSubmit called")
     e.preventDefault()
-    setError("")
     setIsLoading(true)
 
-    console.log("[v0] LoginPage - Calling login with:", { email, passwordLength: password.length })
+    const result = loginUser(email, password)
 
-    try {
-      const result = await login(email, password)
-      console.log("[v0] LoginPage - Login result:", result)
-
-      if (!result.success) {
-        setError(result.error || "Erro ao fazer login")
-        console.log("[v0] LoginPage - Login failed, showing error")
-      } else {
-        console.log("[v0] LoginPage - Login successful!")
-      }
-    } catch (err) {
-      console.error("[v0] LoginPage - Exception during login:", err)
-      setError("Erro inesperado ao fazer login")
+    if (result.success) {
+      toast({
+        title: "Bem-vindo!",
+        description: result.message,
+      })
+      // Redirect to home or dashboard after successful login
+      setTimeout(() => {
+        router.push("/")
+      }, 1000)
+    } else {
+      toast({
+        title: "Erro",
+        description: result.message,
+        variant: "destructive",
+      })
     }
 
     setIsLoading(false)
@@ -63,13 +61,6 @@ export default function LoginPage() {
 
           <Card className="p-8">
             <form onSubmit={handleSubmit} className="space-y-6">
-              {error && (
-                <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-lg flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4" />
-                  <p className="text-sm">{error}</p>
-                </div>
-              )}
-
               <div className="space-y-2">
                 <Label htmlFor="email">E-mail</Label>
                 <div className="relative">
