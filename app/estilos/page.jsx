@@ -8,14 +8,10 @@ const styles = [
   {
     name: "Vintage",
     description: "Clássico e atemporal, inspirado nas décadas passadas com peças retrô e elegantes",
-    image: "/foto15.jpeg",
+    image: "/foto13.jpeg",
     colors: ["#8B4513", "#D2691E", "#CD853F"],
     characteristics: ["Retrô", "Elegante", "Atemporal"],
-    stores: [
-      { name: "Renner", url: "https://www.lojasrenner.com.br" },
-      { name: "C&A", url: "https://www.cea.com.br" },
-      { name: "Riachuelo", url: "https://www.riachuelo.com.br" },
-    ],
+    
   },
   {
     name: "Streetwear",
@@ -23,23 +19,15 @@ const styles = [
     image: "/foto17.jpg",
     colors: ["#000000", "#FFFFFF", "#FF6B6B"],
     characteristics: ["Urbano", "Confortável", "Moderno"],
-    stores: [
-      { name: "Hering", url: "https://www.hering.com.br" },
-      { name: "Reserva", url: "https://www.usereserva.com" },
-      { name: "Zara", url: "https://www.zara.com/br" },
-    ],
+   
   },
   {
     name: "Old Money",
     description: "Sofisticação discreta com peças de qualidade premium, cortes clássicos e elegância atemporal",
-    image: "/foto13.jpeg",
+    image: "/foto15.jpeg",
     colors: ["#2C3E50", "#ECF0F1", "#95A5A6"],
     characteristics: ["Sofisticado", "Discreto", "Premium"],
-    stores: [
-      { name: "Animale", url: "https://www.animale.com.br" },
-      { name: "Farm", url: "https://www.farmrio.com.br" },
-      { name: "Shoulder", url: "https://www.shoulder.com.br" },
-    ],
+    
   },
   {
     name: "Gótico",
@@ -47,11 +35,7 @@ const styles = [
     image: "/foto12.jpeg",
     colors: ["#000000", "#8B0000", "#4B0082"],
     characteristics: ["Dramático", "Misterioso", "Alternativo"],
-    stores: [
-      { name: "Shein", url: "https://www.shein.com.br" },
-      { name: "Renner", url: "https://www.lojasrenner.com.br" },
-      { name: "C&A", url: "https://www.cea.com.br" },
-    ],
+    
   },
   {
     name: "Coquette",
@@ -59,23 +43,15 @@ const styles = [
     image: "/foto14.jpeg",
     colors: ["#FFB6C1", "#FFF0F5", "#E6E6FA"],
     characteristics: ["Romântico", "Delicado", "Feminino"],
-    stores: [
-      { name: "Marisa", url: "https://www.marisa.com.br" },
-      { name: "Riachuelo", url: "https://www.riachuelo.com.br" },
-      { name: "Amaro", url: "https://www.amaro.com" },
-    ],
+  
   },
   {
     name: "Casual",
     description: "Confortável e versátil para o dia a dia, com peças práticas e descomplicadas",
-    image: "/foto18.jpg",
+    image: "/foto19.jpg",
     colors: ["#4A90E2", "#F5F5F5", "#7ED321"],
     characteristics: ["Confortável", "Versátil", "Prático"],
-    stores: [
-      { name: "Hering", url: "https://www.hering.com.br" },
-      { name: "Marisa", url: "https://www.marisa.com.br" },
-      { name: "Renner", url: "https://www.lojasrenner.com.br" },
-    ],
+  
   },
 ]
 
