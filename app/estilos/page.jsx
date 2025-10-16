@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ExternalLink, Sparkles } from "lucide-react"
-import Link from "next/link"
+import { Sparkles } from "lucide-react"
 import Image from "next/image"
 
 const styles = [
@@ -11,7 +10,6 @@ const styles = [
     image: "/foto13.jpeg",
     colors: ["#8B4513", "#D2691E", "#CD853F"],
     characteristics: ["Retrô", "Elegante", "Atemporal"],
-    
   },
   {
     name: "Streetwear",
@@ -19,7 +17,6 @@ const styles = [
     image: "/foto17.jpg",
     colors: ["#000000", "#FFFFFF", "#FF6B6B"],
     characteristics: ["Urbano", "Confortável", "Moderno"],
-   
   },
   {
     name: "Old Money",
@@ -27,7 +24,6 @@ const styles = [
     image: "/foto15.jpeg",
     colors: ["#2C3E50", "#ECF0F1", "#95A5A6"],
     characteristics: ["Sofisticado", "Discreto", "Premium"],
-    
   },
   {
     name: "Gótico",
@@ -35,7 +31,6 @@ const styles = [
     image: "/foto12.jpeg",
     colors: ["#000000", "#8B0000", "#4B0082"],
     characteristics: ["Dramático", "Misterioso", "Alternativo"],
-    
   },
   {
     name: "Coquette",
@@ -43,7 +38,6 @@ const styles = [
     image: "/foto14.jpeg",
     colors: ["#FFB6C1", "#FFF0F5", "#E6E6FA"],
     characteristics: ["Romântico", "Delicado", "Feminino"],
-  
   },
   {
     name: "Casual",
@@ -51,7 +45,6 @@ const styles = [
     image: "/foto19.jpg",
     colors: ["#4A90E2", "#F5F5F5", "#7ED321"],
     characteristics: ["Confortável", "Versátil", "Prático"],
-  
   },
 ]
 
@@ -111,24 +104,6 @@ export default function EstilosPage() {
                           style={{ backgroundColor: color }}
                           title={color}
                         />
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-semibold mb-3">Lojas recomendadas:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {style.stores.map((store) => (
-                        <Link
-                          key={store.name}
-                          href={store.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors text-sm font-medium"
-                        >
-                          {store.name}
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </Link>
                       ))}
                     </div>
                   </div>
