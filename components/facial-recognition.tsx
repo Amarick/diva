@@ -7,6 +7,108 @@ import { Camera, Loader2, CheckCircle2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 
+interface AnalyzeSkinToneResult {
+  skinTone: string
+  colorPalette: string[]
+  recommendedStyles: string[]
+}
+
+function analyzeSkinTone(imageData: ImageData): AnalyzeSkinToneResult {
+  const data = imageData.data
+  let r = 0,
+    g = 0,
+    b = 0
+  let count = 0
+
+  const centerX = imageData.width / 2
+  const centerY = imageData.height / 2
+  const sampleSize = 200 // Aumentado de 150 para 200 para melhor precisão
+
+  for (let y = centerY - sampleSize; y < centerY + sampleSize; y++) {
+    for (let x = centerX - sampleSize; x < centerX + sampleSize; x++) {
+      const i = (Math.floor(y) * imageData.width + Math.floor(x)) * 4
+      if (i >= 0 && i < data.length) {
+        r += data[i]
+        g += data[i + 1]
+        b += data[i + 2]
+        count++
+      }
+    }
+  }
+
+  r = Math.floor(r / count)
+  g = Math.floor(g / count)
+  b = Math.floor(b / count)
+
+  console.log("[v0] RGB médio detectado:", { r, g, b })
+
+  const brightness = (r + g + b) / 3
+  const warmth = r - b // Valores positivos = quente, negativos = frio
+  const isWarm = warmth > 0
+
+  console.log("[v0] Análise detalhada:", { brightness, warmth, isWarm })
+
+  let skinTone: string
+  let colorPalette: string[]
+  let recommendedStyles: string[]
+
+  if (brightness > 190) {
+    // Pele muito clara
+    skinTone = "muito clara"
+    if (isWarm) {
+      colorPalette = ["#FFE4E1", "#FFC0CB", "#FFB6C1", "#FF69B4", "#C71585"]
+      recommendedStyles = ["Coquette", "Romântico", "Old Money"]
+    } else {
+      colorPalette = ["#E6E6FA", "#D8BFD8", "#DDA0DD", "#BA55D3", "#9370DB"]
+      recommendedStyles = ["Vintage", "Gótico", "Casual"]
+    }
+  } else if (brightness > 150) {
+    // Pele clara
+    skinTone = "clara"
+    if (isWarm) {
+      colorPalette = ["#FFDAB9", "#FFE4B5", "#F0E68C", "#DAA520", "#B8860B"]
+      recommendedStyles = ["Vintage", "Old Money", "Casual"]
+    } else {
+      colorPalette = ["#B0E0E6", "#87CEEB", "#4682B4", "#5F9EA0", "#2F4F4F"]
+      recommendedStyles = ["Streetwear", "Casual", "Coquette"]
+    }
+  } else if (brightness > 110) {
+    // Pele média
+    skinTone = "média"
+    if (isWarm) {
+      colorPalette = ["#CD853F", "#D2691E", "#8B4513", "#A0522D", "#654321"]
+      recommendedStyles = ["Vintage", "Coquette", "Old Money"]
+    } else {
+      colorPalette = ["#708090", "#778899", "#696969", "#2F4F4F", "#000080"]
+      recommendedStyles = ["Streetwear", "Gótico", "Casual"]
+    }
+  } else if (brightness > 70) {
+    // Pele morena
+    skinTone = "morena"
+    if (isWarm) {
+      colorPalette = ["#8B4513", "#A0522D", "#D2691E", "#FF8C00", "#FFD700"]
+      recommendedStyles = ["Vintage", "Streetwear", "Casual"]
+    } else {
+      colorPalette = ["#4B0082", "#483D8B", "#6A5ACD", "#7B68EE", "#9370DB"]
+      recommendedStyles = ["Gótico", "Old Money", "Streetwear"]
+    }
+  } else {
+    // Pele escura
+    skinTone = "escura"
+    if (isWarm) {
+      colorPalette = ["#8B0000", "#DC143C", "#FF4500", "#FF6347", "#FFD700"]
+      recommendedStyles = ["Streetwear", "Vintage", "Casual"]
+    } else {
+      colorPalette = ["#191970", "#000080", "#00008B", "#0000CD", "#4169E1"]
+      recommendedStyles = ["Gótico", "Old Money", "Streetwear"]
+    }
+  }
+
+  console.log("[v0] Resultado final da análise:", { skinTone, brightness, warmth, isWarm, colorPalette })
+
+  return { skinTone, colorPalette, recommendedStyles }
+}
+
 export function FacialRecognition() {
   const [step, setStep] = useState<"idle" | "camera" | "analyzing" | "complete">("idle")
   const [stream, setStream] = useState<MediaStream | null>(null)
@@ -21,6 +123,7 @@ export function FacialRecognition() {
     if (typeof window === "undefined") return
 
     try {
+      console.log("[v0] Solicitando acesso à câmera...")
       const mediaStream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: "user",
@@ -31,7 +134,7 @@ export function FacialRecognition() {
       })
       setStream(mediaStream)
       setCameraError(null)
-      console.log("[v0] Camera stream obtained successfully", mediaStream)
+      console.log("[v0] Stream da câmera obtido com sucesso", mediaStream)
     } catch (error) {
       console.error("[v0] Erro ao acessar câmera:", error)
       const errorMessage = error instanceof Error ? error.message : "Erro desconhecido"
@@ -65,20 +168,38 @@ export function FacialRecognition() {
 
     canvas.width = video.videoWidth
     canvas.height = video.videoHeight
-    ctx.drawImage(video, 0, 0)
+
+    // Espelha horizontalmente para corresponder ao vídeo
+    ctx.save()
+    ctx.scale(-1, 1)
+    ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height)
+    ctx.restore()
 
     setStep("analyzing")
 
-    // Simulação de IA
+    // Analisa a imagem capturada
     setTimeout(() => {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height)
+      const analysis = analyzeSkinTone(imageData)
+
       const results = {
-        skinTone: "warm",
-        colorPalette: ["#8B4513", "#D2691E", "#CD853F", "#DEB887"],
-        recommendedStyles: ["Vintage", "Coquette", "Old Money"],
+        ...analysis,
         timestamp: new Date().toISOString(),
+        debug: {
+          captureTime: new Date().toLocaleString("pt-BR"),
+          videoSize: `${canvas.width}x${canvas.height}`,
+          analyzed: true,
+        },
       }
 
-      localStorage.setItem("divaImperialAnalysis", JSON.stringify(results))
+      console.log("[v0] Resultados da análise:", results)
+
+      try {
+        localStorage.setItem("divaImperialAnalysis", JSON.stringify(results))
+      } catch (error) {
+        console.error("[v0] Erro ao salvar no localStorage:", error)
+      }
+
       setStep("complete")
 
       setTimeout(() => {
@@ -90,17 +211,17 @@ export function FacialRecognition() {
 
   useEffect(() => {
     if (videoRef.current && stream) {
-      console.log("[v0] Setting video srcObject", stream)
+      console.log("[v0] Configurando srcObject do vídeo", stream)
       videoRef.current.srcObject = stream
 
-      // Wait for metadata to load before playing
+      // Aguarda o carregamento dos metadados antes de reproduzir
       videoRef.current.onloadedmetadata = () => {
-        console.log("[v0] Video metadata loaded")
+        console.log("[v0] Metadados do vídeo carregados")
         const playPromise = videoRef.current?.play()
         if (playPromise !== undefined) {
           playPromise
             .then(() => {
-              console.log("[v0] Video playing successfully")
+              console.log("[v0] Vídeo reproduzindo com sucesso")
               setStep("camera")
             })
             .catch((err) => {
@@ -147,7 +268,7 @@ export function FacialRecognition() {
                 playsInline
                 muted
                 style={{ transform: "scaleX(-1)" }}
-                className="w-full h-full object-cover absolute inset-0"
+                className="w-full h-full object-cover absolute inset-0 z-[5]"
               />
               <div className="absolute inset-0 border-4 border-primary/50 rounded-lg pointer-events-none z-10">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-80 border-2 border-primary rounded-full" />
