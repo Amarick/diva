@@ -1,5 +1,4 @@
 "use client"
-export const dynamic = "force-client" // adiciona se continuar dando erro de prerender
 
 import { Header } from "@/components/cabeçalho"
 import { Card } from "@/components/ui/card"
@@ -9,26 +8,10 @@ import Link from "next/link"
 
 export default function ColorimetriaPage() {
   const seasons = [
-    {
-      name: "Primavera",
-      description: "Cores quentes e claras que iluminam",
-      colors: ["#FFD700", "#FF6B6B", "#98D8C8", "#F7DC6F"],
-    },
-    {
-      name: "Verão",
-      description: "Cores frias e suaves que harmonizam",
-      colors: ["#B4A7D6", "#87CEEB", "#FFB6C1", "#E6E6FA"],
-    },
-    {
-      name: "Outono",
-      description: "Cores quentes e profundas que aquecem",
-      colors: ["#D2691E", "#8B4513", "#CD853F", "#A0522D"],
-    },
-    {
-      name: "Inverno",
-      description: "Cores frias e intensas que contrastam",
-      colors: ["#000080", "#8B008B", "#DC143C", "#FFFFFF"],
-    },
+    { name: "Primavera", description: "Cores quentes e claras que iluminam", colors: ["#FFD700", "#FF6B6B", "#98D8C8", "#F7DC6F"] },
+    { name: "Verão", description: "Cores frias e suaves que harmonizam", colors: ["#B4A7D6", "#87CEEB", "#FFB6C1", "#E6E6FA"] },
+    { name: "Outono", description: "Cores quentes e profundas que aquecem", colors: ["#D2691E", "#8B4513", "#CD853F", "#A0522D"] },
+    { name: "Inverno", description: "Cores frias e intensas que contrastam", colors: ["#000080", "#8B008B", "#DC143C", "#FFFFFF"] },
   ]
 
   return (
