@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Crown, Mail, Lock, User } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/lib/auth"
-import { Header } from "@/components/header"
+import { Header } from "@/components/cabeçalho"
 
 export default function CadastroPage() {
   const [formData, setFormData] = useState({
