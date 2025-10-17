@@ -26,8 +26,7 @@ export default function RecuperarSenhaPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Check if email exists
-    const exists = checkEmailExists(email)
+    const exists = await checkEmailExists(email)
 
     if (exists) {
       toast({
@@ -69,7 +68,7 @@ export default function RecuperarSenhaPage() {
 
     setIsLoading(true)
 
-    const result = resetPassword(email, newPassword)
+    const result = await resetPassword(email, newPassword)
 
     if (result.success) {
       toast({
@@ -99,7 +98,7 @@ export default function RecuperarSenhaPage() {
               <Crown className="h-4 w-4" />
               Recuperação de senha
             </div>
-            <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
               {step === "email" ? "Esqueceu a senha?" : "Nova senha"}
             </h1>
             <p className="text-muted-foreground">

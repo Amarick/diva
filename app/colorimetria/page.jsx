@@ -1,103 +1,93 @@
+import { Header } from "@/components/header"
 import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-
-const colorimetryTypes = [
-  {
-    name: "Primavera",
-    description: "Tom de pele quente com subtom dourado ou pêssego",
-    colors: ["#FFD700", "#FF6347", "#FFA07A", "#98FB98", "#87CEEB"],
-    characteristics: ["Quente", "Luminoso", "Vibrante"],
-    bestColors: "Cores quentes e claras como coral, pêssego, dourado e verde-claro",
-    avoidColors: "Cores frias e escuras como preto puro, cinza carvão e azul marinho",
-  },
-  {
-    name: "Verão",
-    description: "Tom de pele frio com subtom rosado ou azulado",
-    colors: ["#E6E6FA", "#B0C4DE", "#FFB6C1", "#DDA0DD", "#F0E68C"],
-    characteristics: ["Frio", "Suave", "Delicado"],
-    bestColors: "Cores frias e suaves como lavanda, rosa claro, azul bebê e cinza suave",
-    avoidColors: "Cores quentes e vibrantes como laranja, dourado e marrom quente",
-  },
-  {
-    name: "Outono",
-    description: "Tom de pele quente com subtom dourado ou oliváceo",
-    colors: ["#8B4513", "#D2691E", "#CD853F", "#556B2F", "#B8860B"],
-    characteristics: ["Quente", "Terroso", "Rico"],
-    bestColors: "Cores quentes e terrosas como caramelo, terracota, verde-oliva e mostarda",
-    avoidColors: "Cores frias e vibrantes como rosa pink, azul elétrico e preto puro",
-  },
-  {
-    name: "Inverno",
-    description: "Tom de pele frio com alto contraste",
-    colors: ["#000000", "#FFFFFF", "#FF0000", "#0000FF", "#FF1493"],
-    characteristics: ["Frio", "Intenso", "Contrastante"],
-    bestColors: "Cores frias e intensas como preto, branco puro, vermelho intenso e azul royal",
-    avoidColors: "Cores quentes e suaves como bege, caramelo e laranja suave",
-  },
-]
+import { Button } from "@/components/ui/button"
+import { Palette, CheckCircle } from "lucide-react"
+import Link from "next/link"
 
 export default function ColorimetriaPage() {
+  const seasons = [
+    {
+      name: "Primavera",
+      description: "Cores quentes e claras que iluminam",
+      colors: ["#FFD700", "#FF6B6B", "#98D8C8", "#F7DC6F"],
+    },
+    {
+      name: "Verão",
+      description: "Cores frias e suaves que harmonizam",
+      colors: ["#B4A7D6", "#87CEEB", "#FFB6C1", "#E6E6FA"],
+    },
+    {
+      name: "Outono",
+      description: "Cores quentes e profundas que aquecem",
+      colors: ["#D2691E", "#8B4513", "#CD853F", "#A0522D"],
+    },
+    {
+      name: "Inverno",
+      description: "Cores frias e intensas que contrastam",
+      colors: ["#000080", "#8B008B", "#DC143C", "#FFFFFF"],
+    },
+  ]
+
   return (
-    <main className="min-h-screen pt-20">
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-6xl mx-auto">
+    <>
+      <Header />
+      <main className="min-h-screen pt-28 pb-12 px-4">
+        <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h1 className="font-[family-name:var(--font-playfair)] text-4xl md:text-5xl font-bold mb-4">
-              Guia de Colorimetria
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Entenda os diferentes tipos de colorimetria e descubra qual combina com você
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4">
+              <Palette className="h-4 w-4" />
+              Colorimetria Pessoal
+            </div>
+            <h1 className="text-5xl font-bold mb-4">Descubra Sua Paleta de Cores</h1>
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
+              A colorimetria analisa seu tom de pele, olhos e cabelo para identificar as cores que mais te favorecem
             </p>
           </div>
 
-          <div className="space-y-8">
-            {colorimetryTypes.map((type) => (
-              <Card key={type.name} className="p-8">
-                <div className="space-y-6">
-                  <div>
-                    <h2 className="text-3xl font-bold mb-2">{type.name}</h2>
-                    <p className="text-lg text-muted-foreground">{type.description}</p>
-                  </div>
-
-                  <div className="flex gap-2 flex-wrap">
-                    {type.characteristics.map((char) => (
-                      <Badge key={char} variant="secondary" className="text-sm">
-                        {char}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-medium mb-3">Paleta de cores:</p>
-                    <div className="flex gap-3 flex-wrap">
-                      {type.colors.map((color, index) => (
-                        <div key={index} className="flex flex-col items-center gap-2">
-                          <div
-                            className="w-16 h-16 rounded-lg border-2 border-border shadow-md"
-                            style={{ backgroundColor: color }}
-                          />
-                          <span className="text-xs font-mono">{color}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4 pt-4">
-                    <div className="p-4 bg-primary/5 rounded-lg">
-                      <p className="font-semibold text-sm mb-2 text-primary">✓ Cores ideais:</p>
-                      <p className="text-sm text-muted-foreground">{type.bestColors}</p>
-                    </div>
-                    <div className="p-4 bg-destructive/5 rounded-lg">
-                      <p className="font-semibold text-sm mb-2 text-destructive">✗ Evite:</p>
-                      <p className="text-sm text-muted-foreground">{type.avoidColors}</p>
-                    </div>
-                  </div>
+          <div className="grid md:grid-cols-2 gap-6 mb-12">
+            {seasons.map((season) => (
+              <Card key={season.name} className="p-6">
+                <h3 className="text-2xl font-bold mb-2">{season.name}</h3>
+                <p className="text-muted-foreground mb-4">{season.description}</p>
+                <div className="flex gap-2">
+                  {season.colors.map((color, index) => (
+                    <div
+                      key={index}
+                      className="w-12 h-12 rounded-lg border-2 border-border"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
                 </div>
               </Card>
             ))}
           </div>
+
+          <Card className="p-8 mb-8">
+            <h2 className="text-2xl font-bold mb-6">Benefícios da Análise de Colorimetria:</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+              {[
+                "Realça sua beleza natural",
+                "Facilita escolhas de roupas e maquiagem",
+                "Economiza tempo e dinheiro em compras",
+                "Aumenta sua autoconfiança",
+                "Cria harmonia visual",
+                "Identifica cores que iluminam seu rosto",
+              ].map((item, index) => (
+                <div key={index} className="flex items-start gap-3">
+                  <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                  <p className="text-muted-foreground">{item}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          <div className="text-center">
+            <Link href="/cadastro">
+              <Button size="lg">Fazer Análise de Colorimetria</Button>
+            </Link>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </>
   )
 }
