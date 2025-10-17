@@ -1,14 +1,17 @@
 "use client"
 
 import { useAuth } from "@/lib/auth"
+import { useOrders } from "@/lib/pedidos-contexto"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Crown, User, Mail, Calendar, Palette, Sparkles } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Crown, User, Mail, Calendar, Palette, Sparkles, Package, ShoppingBag } from "lucide-react"
 import { Header } from "@/components/cabeçalho"
 import Link from "next/link"
 
 export default function DashboardPage() {
   const { user, logout } = useAuth()
+  const { getOrdersByUser } = useOrders()
 
   if (!user) {
     return (
@@ -25,6 +28,9 @@ export default function DashboardPage() {
       </>
     )
   }
+
+  const userOrders = getOrdersByUser(user.id)
+  const recentOrders = userOrders.slice(0, 3)
 
   return (
     <>
@@ -81,20 +87,73 @@ export default function DashboardPage() {
               </Card>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-4 mb-8">
+            {userOrders.length > 0 && (
+              <Card className="p-6 mb-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-primary/10 w-10 h-10 rounded-lg flex items-center justify-center">
+                      <Package className="h-5 w-5 text-primary" />
+                    </div>
+                    <h2 className="text-xl font-bold">Pedidos Recentes</h2>
+                  </div>
+                  <Link href="/pedidos">
+                    <Button variant="ghost" size="sm">
+                      Ver Todos
+                    </Button>
+                  </Link>
+                </div>
+
+                <div className="space-y-4">
+                  {recentOrders.map((order) => (
+                    <div key={order.id} className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
+                      <div className="flex items-center gap-4">
+                        <Package className="h-8 w-8 text-primary" />
+                        <div>
+                          <p className="font-semibold">Pedido #{order.id.slice(0, 8)}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {new Date(order.createdAt).toLocaleDateString("pt-BR")} • {order.items.length}{" "}
+                            {order.items.length === 1 ? "item" : "itens"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-primary">R$ {order.total.toFixed(2)}</p>
+                        <Badge variant={order.status === "delivered" ? "default" : "secondary"} className="mt-1">
+                          {order.status === "processing" && "Processando"}
+                          {order.status === "shipped" && "Enviado"}
+                          {order.status === "delivered" && "Entregue"}
+                          {order.status === "pending" && "Pendente"}
+                          {order.status === "cancelled" && "Cancelado"}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            <div className="grid md:grid-cols-4 gap-4 mb-8">
+              <Link href="/loja">
+                <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
+                  <ShoppingBag className="h-8 w-8 text-primary mb-3" />
+                  <h3 className="font-bold mb-2">Loja</h3>
+                  <p className="text-sm text-muted-foreground">Explore nossa coleção</p>
+                </Card>
+              </Link>
+
               <Link href="/colorimetria">
                 <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
                   <Palette className="h-8 w-8 text-primary mb-3" />
                   <h3 className="font-bold mb-2">Colorimetria</h3>
-                  <p className="text-sm text-muted-foreground">Descubra sua paleta de cores</p>
+                  <p className="text-sm text-muted-foreground">Descubra sua paleta</p>
                 </Card>
               </Link>
 
               <Link href="/estilos">
                 <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
                   <Sparkles className="h-8 w-8 text-primary mb-3" />
-                  <h3 className="font-bold mb-2">Análise de Estilo</h3>
-                  <p className="text-sm text-muted-foreground">Encontre seu estilo único</p>
+                  <h3 className="font-bold mb-2">Estilos</h3>
+                  <p className="text-sm text-muted-foreground">Encontre seu estilo</p>
                 </Card>
               </Link>
 
@@ -102,7 +161,7 @@ export default function DashboardPage() {
                 <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
                   <Crown className="h-8 w-8 text-primary mb-3" />
                   <h3 className="font-bold mb-2">Reconhecimento</h3>
-                  <p className="text-sm text-muted-foreground">Análise facial completa</p>
+                  <p className="text-sm text-muted-foreground">Análise completa</p>
                 </Card>
               </Link>
             </div>

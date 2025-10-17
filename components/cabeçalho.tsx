@@ -4,17 +4,21 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Crown, Menu, X, User, LogOut } from "lucide-react"
+import { Crown, Menu, X, User, LogOut, ShoppingCart } from "lucide-react"
 import { useAuth } from "@/lib/auth"
+import { useCart } from "@/lib/carrinho-contexto"
 import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
   const { user, logout } = useAuth()
+  const { itemCount } = useCart()
 
   const navItems = [
     { href: "/", label: "Início" },
+    { href: "/loja", label: "Loja" },
     { href: "/reconhecimento", label: "Reconhecimento" },
     { href: "/colorimetria", label: "Colorimetria" },
     { href: "/estilos", label: "Estilos" },
@@ -52,6 +56,16 @@ export function Header() {
 
           {/* User Actions */}
           <div className="hidden md:flex items-center gap-3">
+            <Link href="/carrinho">
+              <Button variant="ghost" size="sm" className="relative">
+                <ShoppingCart className="h-4 w-4" />
+                {itemCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    {itemCount}
+                  </Badge>
+                )}
+              </Button>
+            </Link>
             {user ? (
               <>
                 <Link href="/dashboard">
@@ -102,6 +116,13 @@ export function Header() {
                 </Link>
               ))}
               <div className="flex flex-col gap-2 pt-4 border-t">
+                <Link href="/carrinho" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="ghost" size="sm" className="w-full justify-start relative">
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Carrinho
+                    {itemCount > 0 && <Badge className="ml-auto">{itemCount}</Badge>}
+                  </Button>
+                </Link>
                 {user ? (
                   <>
                     <Link href="/dashboard" onClick={() => setIsMenuOpen(false)}>
