@@ -11,7 +11,52 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Crown, Mail, Lock, ArrowLeft } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import { checkEmailExists, resetPassword } from "@/lib/auth"
+
+async function resetPassword(email: string, newPassword: string): Promise<{ success: boolean; message: string }> {
+  try {
+    const res = await fetch("/api/reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password: newPassword }),
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      return {
+        success: false,
+        message: data?.message || "Erro ao redefinir a senha",
+      }
+    }
+
+    return {
+      success: true,
+      message: data?.message || "Senha redefinida com sucesso",
+    }
+  } catch {
+    return {
+      success: false,
+      message: "Erro de rede ao redefinir a senha",
+    }
+  }
+}
+
+// Local helper to check if an email exists (calls an API route).
+// Adjust the API path and response shape as needed for your backend.
+async function checkEmailExists(email: string): Promise<boolean> {
+  try {
+    const res = await fetch("/api/check-email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    })
+    if (!res.ok) return false
+    const data = await res.json()
+    return Boolean(data?.exists)
+  } catch {
+    return false
+  }
+}
 
 export default function RecuperarSenhaPage() {
   const [step, setStep] = useState<"email" | "reset">("email")

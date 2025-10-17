@@ -35,7 +35,7 @@ export default function LoginPage() {
       })
     } else {
       toast({
-        title: "Erro",
+        title: "Erro ao fazer login",
         description: result.error || "Erro ao fazer login",
         variant: "destructive",
       })
@@ -57,6 +57,16 @@ export default function LoginPage() {
               </div>
               <h1 className="text-4xl md:text-5xl font-bold mb-4">Entrar</h1>
               <p className="text-muted-foreground">Acesse sua conta para continuar sua jornada imperial</p>
+            </div>
+
+            <div className="mb-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
+              <p className="text-sm text-center text-muted-foreground">
+                <strong>Usuário de teste:</strong>
+                <br />
+                Email: teste@divaimperial.com
+                <br />
+                Senha: 123456
+              </p>
             </div>
 
             <Card className="p-8">

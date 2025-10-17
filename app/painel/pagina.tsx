@@ -15,7 +15,12 @@ export default function DashboardPage() {
       <>
         <Header />
         <main className="min-h-screen flex items-center justify-center">
-          <p>Carregando...</p>
+          <div className="text-center">
+            <p className="text-muted-foreground mb-4">Você precisa estar logado para acessar esta página</p>
+            <Link href="/login">
+              <Button>Fazer Login</Button>
+            </Link>
+          </div>
         </main>
       </>
     )
