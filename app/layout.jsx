@@ -1,3 +1,5 @@
+"use client"
+
 import { GeistSans } from "geist/font/sans"
 import { GeistMono } from "geist/font/mono"
 import { Playfair_Display } from "next/font/google"
@@ -6,6 +8,7 @@ import "./globals.css"
 import { Navigation } from "@/components/navigation"
 import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
+import { AuthProvider } from "@/lib/auth" // ✅ seu provider daqui!
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -24,24 +27,27 @@ const navItems = [
 
 export const metadata = {
   title: "Diva Imperial - Análise de Estilo e Colorimetria",
-  description: "Descubra seu estilo único com reconhecimento facial e análise personalizada de colorimetria",
+  description:
+    "Descubra seu estilo único com reconhecimento facial e análise personalizada de colorimetria",
   generator: "v0.app",
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className="light">
-      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${playfair.variable}`}>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Navigation navItems={navItems} />
-          {children}
-          <Toaster />
-        </Suspense>
-        <Analytics />
+      <body
+        className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${playfair.variable}`}
+      >
+        {/* todo o app está dentro do AuthProvider */}
+        <AuthProvider>
+          <Suspense fallback={<div>Carregando...</div>}>
+            <Navigation navItems={navItems} />
+            {children}
+            <Toaster />
+          </Suspense>
+          <Analytics />
+        </AuthProvider>
       </body>
     </html>
   )
 }
-
-
-
