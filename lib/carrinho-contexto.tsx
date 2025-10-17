@@ -27,7 +27,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
 
-  // Load cart from localStorage on mount
+  // Carregar do localStorage ao montar
   useEffect(() => {
     const savedCart = localStorage.getItem("cart")
     if (savedCart) {
@@ -35,25 +35,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  // Save cart to localStorage whenever it changes
+  // Salvar no localStorage quando itens mudam
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(items))
   }, [items])
 
   const addItem = (newItem: CartItem) => {
     setItems((currentItems) => {
-      // Check if item already exists (same id, size, and color)
       const existingItemIndex = currentItems.findIndex(
-        (item) => item.id === newItem.id && item.size === newItem.size && item.color === newItem.color,
+        (item) =>
+          item.id === newItem.id &&
+          item.size === newItem.size &&
+          item.color === newItem.color
       )
 
       if (existingItemIndex > -1) {
-        // Update quantity if item exists
         const updatedItems = [...currentItems]
         updatedItems[existingItemIndex].quantity += newItem.quantity
         return updatedItems
       } else {
-        // Add new item
         return [...currentItems, newItem]
       }
     })
@@ -68,19 +68,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeItem(id)
       return
     }
-
-    setItems((currentItems) => currentItems.map((item) => (item.id === id ? { ...item, quantity } : item)))
+    setItems((currentItems) =>
+      currentItems.map((item) =>
+        item.id === id ? { ...item, quantity } : item
+      )
+    )
   }
 
-  const clearCart = () => {
-    setItems([])
-  }
+  const clearCart = () => setItems([])
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, total, itemCount }}>
+    <CartContext.Provider
+      value={{ items, addItem, removeItem, updateQuantity, clearCart, total, itemCount }}
+    >
       {children}
     </CartContext.Provider>
   )
@@ -88,8 +91,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
 export function useCart() {
   const context = useContext(CartContext)
-  if (context === undefined) {
-    throw new Error("useCart must be used within a CartProvider")
-  }
+  if (!context) throw new Error("useCart must be used within a CartProvider")
   return context
 }
