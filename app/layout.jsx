@@ -1,12 +1,12 @@
-import GeistSans from "geist/font/sans"
-import GeistMono from "geist/font/mono"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
 import { Playfair_Display } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { Navigation } from "@/components/navigation"
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from "@/lib/auth"
-import { CartProvider } from "@/lib/carrinho-contexto" // ✅ necessário se usar useCart
+import { CartProvider } from "@/lib/cart" // ✅ necessário se usar useCart
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
