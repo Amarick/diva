@@ -1,5 +1,3 @@
-"use client"
-
 import { geistSans } from "geist/font/sans"
 import { geistMono } from "geist/font/mono"
 import { Playfair_Display } from "next/font/google"
