@@ -1,14 +1,14 @@
 "use client"
 
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
+import { geistSans } from "geist/font/sans"
+import { geistMono } from "geist/font/mono"
 import { Playfair_Display } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { Navigation } from "@/components/navigation"
 import { Toaster } from "@/components/ui/toaster"
 import { Suspense } from "react"
-import { AuthProvider } from "@/lib/auth" // ✅ seu provider daqui!
+import { AuthProvider } from "@/lib/auth"
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -36,9 +36,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className="light">
       <body
-        className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${playfair.variable}`}
+        className={`antialiased font-sans ${geistSans.variable} ${geistMono.variable} ${playfair.variable}`}
       >
-        {/* todo o app está dentro do AuthProvider */}
         <AuthProvider>
           <Suspense fallback={<div>Carregando...</div>}>
             <Navigation navItems={navItems} />
