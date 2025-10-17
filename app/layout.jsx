@@ -1,5 +1,5 @@
-import { geistSans } from "geist/font/sans"
-import { geistMono } from "geist/font/mono"
+import GeistSans from "geist/font/sans"
+import GeistMono from "geist/font/mono"
 import { Playfair_Display } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
@@ -23,25 +23,22 @@ const navItems = [
   { href: "/sobre", label: "Sobre" },
 ]
 
+// ✅ Mantém o metadata aqui, já que o layout não é client-side
 export const metadata = {
   title: "Diva Imperial - Análise de Estilo e Colorimetria",
   description:
-    "Descubra seu estilo único com reconhecimento facial e análise personalizada de colorimetria",
+    "Descubra seu estilo único com reconhecimento facial e análise personalizada de colorimetria.",
   generator: "v0.app",
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR" className="light">
-      <body
-        className={`antialiased font-sans ${geistSans.variable} ${geistMono.variable} ${playfair.variable}`}
-      >
+      <body className="light">
         <AuthProvider>
-          <Suspense fallback={<div>Carregando...</div>}>
-            <Navigation navItems={navItems} />
-            {children}
-            <Toaster />
-          </Suspense>
+          <Navigation items={navItems} />
+          <main>{children}</main>
+          <Toaster />
           <Analytics />
         </AuthProvider>
       </body>
