@@ -1,5 +1,10 @@
 "use client"
 
+
+import dynamic from "next/dynamic"
+
+const CadastroPage = dynamic(() => import("./CadastroPageComponent"), { ssr: false })
+
 import React from "react"
 
 import { useState } from "react"
