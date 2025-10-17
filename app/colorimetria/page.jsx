@@ -1,3 +1,6 @@
+"use client"
+export const dynamic = "force-client" // adiciona se continuar dando erro de prerender
+
 import { Header } from "@/components/cabeçalho"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
